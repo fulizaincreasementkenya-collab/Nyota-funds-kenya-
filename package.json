@@ -1,15 +1,22 @@
 {
-  "name": "finapi-stk-app",
+  "name": "nyota-funds-backend",
   "version": "1.0.0",
-  "description": "Node.js express backend for FinAPI STK Push on Render",
+  "description": "Backend server for Nyota Funds grant activation and M-Pesa STK payment processing.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "dependencies": {
     "axios": "^1.6.8",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
