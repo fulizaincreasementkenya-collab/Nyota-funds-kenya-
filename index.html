@@ -8,57 +8,142 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
         body { background: #f4f8f4; color: #222; }
         
+        /* Grass Green Gradient Header */
         .header { background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%); color: white; padding: 16px; text-align: center; font-size: 20px; font-weight: 700; position: relative; }
         .header span { color: #ffeb3b; }
         .live-status { font-size: 11px; background: rgba(255,255,255,0.2); border-radius: 12px; padding: 3px 10px; display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; }
         .status-dot { width: 8px; height: 8px; background: #00e676; border-radius: 50%; display: inline-block; animation: pulse 1.5s infinite; }
         
+        /* Dynamic Blinking Clock */
         .live-clock-badge { font-size: 11px; background: rgba(255, 235, 59, 0.25); color: #ffeb3b; border: 1px solid #ffeb3b; border-radius: 12px; padding: 3px 10px; display: inline-flex; align-items: center; gap: 6px; margin-top: 5px; font-weight: 600; }
         .blink-dot { width: 7px; height: 7px; background: #ff3d00; border-radius: 50%; display: inline-block; animation: blink 1s infinite; }
         
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        .rotating-frame-wrapper { display: flex; justify-content: center; align-items: center; margin: 10px auto 4px auto; }
-        .rotating-frame { position: relative; padding: 8px 18px; background: rgba(0, 0, 0, 0.35); border-radius: 30px; display: inline-flex; align-items: center; gap: 10px; z-index: 1; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); overflow: hidden; }
-        .rotating-frame::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(#ffeb3b, #00e676, #ffffff, #ff3d00, #ffeb3b); animation: spinBorder 4s linear infinite; z-index: -2; }
-        .rotating-frame::after { content: ''; position: absolute; inset: 3px; background: #1b4d1d; border-radius: 26px; z-index: -1; }
+        /* Animated Rotating Frame with Blinking Text & Rotating Flag */
+        .rotating-frame-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px auto 4px auto;
+        }
 
-        @keyframes spinBorder { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .rotating-flag { font-size: 22px; display: inline-block; animation: rotateFlag 5s linear infinite; }
-        @keyframes rotateFlag { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .rotating-frame {
+            position: relative;
+            padding: 8px 18px;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
 
-        .blinking-frame-text { font-size: 13px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; animation: smoothBlink 1.4s ease-in-out infinite alternate; }
-        @keyframes smoothBlink { 0% { color: #ffeb3b; text-shadow: 0 0 4px #ffeb3b; opacity: 1; } 50% { color: #ffffff; text-shadow: 0 0 8px #ffffff; opacity: 0.85; } 100% { color: #76ff03; text-shadow: 0 0 4px #76ff03; opacity: 0.3; } }
+        /* Rotating Animated Gradient Border Effect */
+        .rotating-frame::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(#ffeb3b, #00e676, #ffffff, #ff3d00, #ffeb3b);
+            animation: spinBorder 4s linear infinite;
+            z-index: -2;
+        }
+
+        .rotating-frame::after {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            background: #1b4d1d;
+            border-radius: 26px;
+            z-index: -1;
+        }
+
+        @keyframes spinBorder {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Continuous Rotating Kenya Flag */
+        .rotating-flag {
+            font-size: 22px;
+            display: inline-block;
+            animation: rotateFlag 5s linear infinite;
+        }
+
+        @keyframes rotateFlag {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Glowing Blinking Text Effect */
+        .blinking-frame-text {
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            animation: smoothBlink 1.4s ease-in-out infinite alternate;
+        }
+
+        @keyframes smoothBlink {
+            0% {
+                color: #ffeb3b;
+                text-shadow: 0 0 4px #ffeb3b, 0 0 10px #ffeb3b;
+                opacity: 1;
+            }
+            50% {
+                color: #ffffff;
+                text-shadow: 0 0 8px #ffffff, 0 0 15px #00e676;
+                opacity: 0.85;
+            }
+            100% {
+                color: #76ff03;
+                text-shadow: 0 0 4px #76ff03, 0 0 10px #76ff03;
+                opacity: 0.3;
+            }
+        }
 
         .screen { display: none; min-height: 100vh; padding-bottom: 70px; }
         .screen.active { display: block; }
-        .container { padding: 20px; max-width: 600px; margin: 0 auto; }
-        .card { background: white; border-radius: 14px; padding: 24px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(46,125,50,0.08); }
-        .hero { background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); color: white; border-radius: 14px; padding: 24px 20px; margin-bottom: 20px; text-align: center; }
-        .hero h1 { font-size: 24px; margin-bottom: 8px; }
-        .hero p { font-size: 13px; opacity: 0.95; }
+        .container { padding: 15px; max-width: 600px; margin: 0 auto; }
+        .card { background: white; border-radius: 14px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(46,125,50,0.08); }
         
+        /* Grass Green Hero Section */
+        .hero { background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); color: white; border-radius: 14px; padding: 18px 15px; margin-bottom: 15px; text-align: center; }
+        .hero h1 { font-size: 22px; margin-bottom: 6px; }
+        .hero p { font-size: 12px; opacity: 0.95; }
+        
+        /* Grass Green Action Button */
         .btn { width: 100%; background: #4caf50; color: white; border: none; padding: 15px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 10px; box-shadow: 0 4px 10px rgba(76,175,80,0.3); }
         .btn:hover { background: #43a047; }
         .btn:disabled { background: #ccc; cursor: not-allowed; opacity: 0.7; box-shadow: none; }
         
-        .terms-box { background: #f1f8f1; border: 1px solid #c8e6c9; border-radius: 8px; padding: 15px; max-height: 160px; overflow-y: auto; font-size: 12px; color: #444; margin: 15px 0; text-align: left; line-height: 1.5; }
-        .checkbox-group { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; text-align: left; margin-bottom: 15px; color: #333; }
+        .terms-box { background: #f1f8f1; border: 1px solid #c8e6c9; border-radius: 8px; padding: 12px; max-height: 120px; overflow-y: auto; font-size: 12px; color: #444; margin: 12px 0; text-align: left; line-height: 1.4; }
+        .checkbox-group { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; text-align: left; margin-bottom: 12px; color: #333; }
         .checkbox-group input { margin-top: 3px; accent-color: #2e7d32; }
         
-        .comments-section { text-align: left; margin-top: 20px; }
-        .comments-header { font-size: 14px; font-weight: 700; color: #2e7d32; margin-bottom: 10px; border-bottom: 2px solid #c8e6c9; padding-bottom: 5px; }
-        .ticker-wrapper { height: 220px; overflow: hidden; position: relative; border-radius: 8px; background: #fafdfa; border: 1px solid #e8f5e9; }
-        .ticker-content { display: flex; flex-direction: column; animation: scroll-up 35s linear infinite; }
+        /* Compact Live Testimonials */
+        .comments-section { text-align: left; margin: 12px 0; }
+        .comments-header { font-size: 13px; font-weight: 700; color: #2e7d32; margin-bottom: 8px; border-bottom: 2px solid #c8e6c9; padding-bottom: 4px; display: flex; align-items: center; justify-content: space-between; }
+        .ticker-wrapper { height: 130px; overflow: hidden; position: relative; border-radius: 8px; background: #fafdfa; border: 1px solid #e8f5e9; }
+        .ticker-content { display: flex; flex-direction: column; animation: scroll-up 25s linear infinite; }
         
-        @keyframes scroll-up { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
+        @keyframes scroll-up {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); }
+        }
 
-        .comment-card { padding: 10px 12px; border-bottom: 1px solid #e8f5e9; font-size: 12px; display: flex; gap: 10px; align-items: center; }
-        .comment-avatar { width: 32px; height: 32px; border-radius: 50%; background: #4caf50; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; flex-shrink: 0; }
-        .comment-body strong { color: #2e7d32; display: block; font-size: 12px; }
-        .comment-body p { color: #555; margin-top: 2px; }
+        .comment-card { padding: 8px 10px; border-bottom: 1px solid #e8f5e9; font-size: 11px; display: flex; gap: 8px; align-items: center; }
+        .comment-avatar { width: 28px; height: 28px; border-radius: 50%; background: #4caf50; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 11px; flex-shrink: 0; }
+        .comment-body strong { color: #2e7d32; display: block; font-size: 11px; }
+        .comment-body p { color: #555; margin-top: 1px; }
 
+        /* Form Styles & Input Validation */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .form-group { margin-bottom: 14px; text-align: left; position: relative; }
         .form-group label { display: block; font-size: 13px; color: #333; margin-bottom: 5px; font-weight: 600; }
@@ -67,6 +152,7 @@
         .form-group input, .form-group select { width: 100%; padding: 11px 36px 11px 11px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; background: #fff; transition: border-color 0.2s; }
         .form-group input:focus, .form-group select:focus { outline: none; border-color: #4caf50; }
         
+        /* Validation Indicators */
         .form-group.valid input, .form-group.valid select, .input-group.valid { border-color: #2e7d32 !important; }
         .form-group.invalid input, .form-group.invalid select, .input-group.invalid { border-color: #d32f2f !important; }
         
@@ -81,14 +167,20 @@
         .country-code { background: #e8f5e9; padding: 11px 13px; font-weight: 700; color: #2e7d32; border-right: 1px solid #c8e6c9; font-size: 14px; flex-shrink: 0; }
         .input-group input { border: none !important; border-radius: 0; padding-right: 36px; }
 
+        /* Profile & Avatar */
         .profile-card { text-align: center; background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; }
         .avatar-container { width: 80px; height: 80px; margin: 0 auto 12px auto; position: relative; }
         .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid #4caf50; }
-        .avatar-spin { width: 100%; height: 100%; border-radius: 50%; border: 4px solid #4caf50; border-top: 4px solid #81c784; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; color: #2e7d32; animation: spin-avatar 6s linear infinite; background: #e8f5e9; }
+        .avatar-spin { 
+            width: 100%; height: 100%; border-radius: 50%; border: 4px solid #4caf50; 
+            border-top: 4px solid #81c784; display: flex; align-items: center; justify-content: center; 
+            font-size: 24px; font-weight: bold; color: #2e7d32; animation: spin-avatar 6s linear infinite; background: #e8f5e9; 
+        }
         @keyframes spin-avatar { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .avatar-spin span { animation: keep-upright 6s linear infinite; }
         @keyframes keep-upright { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
 
+        /* Grants Layout */
         .grant-option { background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 16px; margin-bottom: 12px; cursor: pointer; transition: 0.2s; text-align: left; position: relative; }
         .grant-option:hover { border-color: #4caf50; }
         .grant-option.selected { border-color: #2e7d32; background: #e8f5e9; }
@@ -108,18 +200,34 @@
         .error { color: #d32f2f; font-size: 11px; margin-top: 4px; display: none; font-weight: 600; }
         .gov-badge { background: #ffeb3b; color: #2e7d32; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; display: inline-block; margin-bottom: 8px; }
 
-        .notification { position: fixed; top: 70px; right: 15px; background: white; padding: 12px 16px; border-radius: 10px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 10px; transform: translateX(120%); transition: transform 0.4s ease; z-index: 9999; max-width: 300px; border-left: 4px solid #4caf50; }
+        /* Toast Notifications */
+        .notification {
+            position: fixed; top: 70px; right: 15px; background: white; padding: 12px 16px;
+            border-radius: 10px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); display: flex; align-items: center;
+            gap: 10px; transform: translateX(120%); transition: transform 0.4s ease; z-index: 9999;
+            max-width: 300px; border-left: 4px solid #4caf50;
+        }
         .notification.show { transform: translateX(0); }
         .notification-icon { font-size: 20px; }
         .notification-text { font-size: 12px; text-align: left; }
         .notification-text b { color: #2e7d32; }
 
-        .floating-support { position: fixed; bottom: 75px; right: 15px; background: white; padding: 8px 14px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px; z-index: 999; border: 2px solid #4caf50; cursor: pointer; user-select: none; }
+        /* Floating Support */
+        .floating-support {
+            position: fixed; bottom: 75px; right: 15px; background: white; padding: 8px 14px;
+            border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; align-items: center;
+            gap: 8px; z-index: 999; border: 2px solid #4caf50; cursor: pointer; user-select: none;
+        }
         .support-dot { width: 10px; height: 10px; background: #00e676; border-radius: 50%; animation: pulse-green 1s infinite; }
         @keyframes pulse-green { 0% { transform: scale(0.9); opacity: 0.7; } 50% { transform: scale(1.3); opacity: 1; } 100% { transform: scale(0.9); opacity: 0.7; } }
         .support-text { font-size: 11px; font-weight: 800; color: #2e7d32; letter-spacing: 0.5px; }
 
-        .transition-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255,255,255,0.92); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10000; display: none; }
+        /* Overlay Loader */
+        .transition-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255,255,255,0.92);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10000;
+            display: none;
+        }
         .transition-overlay p { color: #2e7d32; font-weight: 700; margin-top: 10px; font-size: 14px; }
     </style>
 </head>
@@ -174,15 +282,19 @@
                 <label for="termsCheck">I have read, understood, and accept the Terms & Conditions of the Nyota Government Grant Program.</label>
             </div>
             <div class="error" id="termsError">⚠️ You must accept the terms to proceed.</div>
+
+            <!-- Live Testimonials Placed Above the Main Button -->
+            <div class="comments-section">
+                <div class="comments-header">
+                    <span>💬 Live Citizen Activity</span>
+                    <span style="font-size: 10px; color: #00e676; background: #2e7d32; padding: 2px 6px; border-radius: 10px;">LIVE</span>
+                </div>
+                <div class="ticker-wrapper">
+                    <div class="ticker-content" id="tickerContent"></div>
+                </div>
+            </div>
             
             <button type="button" class="btn" onclick="acceptTerms()">Proceed to Application</button>
-        </div>
-
-        <div class="card comments-section">
-            <div class="comments-header">💬 Live Citizen Testimonials</div>
-            <div class="ticker-wrapper">
-                <div class="ticker-content" id="tickerContent"></div>
-            </div>
         </div>
     </div>
     <div class="footer">© 2026 Nyota Funds Kenya. In Partnership with Govt of Kenya.</div>
@@ -417,12 +529,12 @@
 </div>
 
 <script>
-// CHANGE THIS TO YOUR LIVE BACKEND URL (e.g., Render host)
 const BACKEND_URL = "https://nyota-backend-osjb.onrender.com";
 
 let userData = {};
 let selectedGrant = 0, selectedFee = 0;
 
+// Dynamic Real-Time Clock
 function updateClock() {
     const now = new Date();
     const timeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
@@ -431,6 +543,7 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
+// Testimonial Dataset
 const testimonials = [
     { name: "Wanjiku M.", comment: "Received KSh 22,000 for my grocery startup. Easy process!", initial: "W" },
     { name: "Ochieng O.", comment: "Paid KSh 400 activation fee and received KSh 22,000 grant this morning.", initial: "O" },
@@ -466,6 +579,7 @@ function initTestimonials() {
 }
 initTestimonials();
 
+// Populate Grants Page
 const grantList = document.getElementById('grantList');
 const grantsData = [
     { grant: 5000, fee: 250 },
@@ -497,7 +611,7 @@ function navigateWithLoader(targetScreen) {
     setTimeout(() => {
         overlay.style.display = 'none';
         show(targetScreen);
-    }, 1500);
+    }, 2000);
 }
 
 function show(n) {
@@ -506,12 +620,14 @@ function show(n) {
     window.scrollTo(0,0);
 }
 
+// Strictly enforce numeric character entry for numeric fields
 ['phone', 'idNumber', 'payPhone'].forEach(id => {
     document.getElementById(id).addEventListener('input', function() {
         this.value = this.value.replace(/[^0-9]/g, '');
     });
 });
 
+// Real-Time Validation Functions & Green Tick / Alert Toggle
 function setFieldStatus(fieldId, isValid, isTouched = true) {
     const group = document.getElementById('group-' + fieldId);
     const errDiv = document.getElementById('err-' + fieldId);
@@ -544,7 +660,7 @@ function validateField(id) {
         case 'surname':
             return val.length >= 2;
         case 'middleName':
-            return true;
+            return true; // Optional
         case 'gender':
         case 'occupation':
         case 'source':
@@ -562,6 +678,7 @@ function validateField(id) {
     }
 }
 
+// Attach Event Listeners for Dynamic Feedback
 const fieldsToValidate = ['firstName', 'surname', 'middleName', 'gender', 'email', 'phone', 'idNumber', 'occupation', 'source', 'payPhone'];
 
 fieldsToValidate.forEach(id => {
@@ -595,6 +712,7 @@ function acceptTerms() {
 document.getElementById('form2').addEventListener('submit', e => {
     e.preventDefault();
     let isAllValid = true;
+
     const requiredFields = ['firstName', 'surname', 'gender', 'email', 'phone', 'idNumber', 'occupation', 'source'];
 
     requiredFields.forEach(id => {
@@ -695,8 +813,7 @@ async function paySTK() {
     navigateWithLoader(5);
 
     try {
-        // Pointing explicitly to /api/pay
-        const response = await fetch(`${BACKEND_URL}/api/pay`, {
+        const response = await fetch(`${BACKEND_URL}/pay`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -710,8 +827,8 @@ async function paySTK() {
         });
         const data = await response.json();
 
-        if (data.status === "Success" || data.success === true || data.status === "Queued") {
-            console.log("STK Push triggered successfully:", data);
+        if(data.status === "Success") {
+            alert('STK Push dispatched! Enter your PIN on your mobile phone to complete activation.');
         } else {
             alert('Notice: ' + (data.message || 'Transaction could not initiate. Please try again.'));
             show(4);
@@ -726,6 +843,7 @@ async function paySTK() {
     }
 }
 
+// Continuous notifications across active screens
 setInterval(() => {
     const activeScreen = document.querySelector('.screen.active').id;
     if(['s1', 's2', 's3'].includes(activeScreen)) {
@@ -735,6 +853,7 @@ setInterval(() => {
         showNotification(randomPhone, randomAmount, randomName);
     }
 }, 4500);
+
 </script>
 </body>
 </html>
