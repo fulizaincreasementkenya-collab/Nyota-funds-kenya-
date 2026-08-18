@@ -6,63 +6,86 @@ require('dotenv').config();
 
 const app = express();
 
-app.use(express.json());
+// Middleware
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Serve Static Frontend Files
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.post('/api/pay', async (req, res) => {
+// STK Push Processing Endpoint
+app.post('/pay', async (req, res) => {
     try {
-        const { phone, amount } = req.body;
+        const { phone, amount, grant_amount, full_name, id_number, occupation } = req.body;
 
+        // Validation check for required parameters
         if (!phone || !amount) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Phone number and amount are required.' 
+            return res.status(400).json({
+                status: 'Error',
+                message: 'Phone number and payment amount are required.'
             });
         }
 
+        // Format and payload setup for M-PESA STK Push gateway
         const payload = {
-            provider: process.env.FINAPI_PROVIDER || 'swiftwallet',
-            phone: phone,
-            amount: Number(amount)
+            provider: process.env.PAYMENT_PROVIDER || 'swiftwallet',
+            phone: phone.replace(/\+/g, ''), // Ensure clean 254 format
+            amount: Number(amount),
+            meta: {
+                grant_amount: grant_amount || 0,
+                full_name: full_name || '',
+                id_number: id_number || '',
+                occupation: occupation || ''
+            }
         };
 
+        const gatewayUrl = process.env.PAYMENT_GATEWAY_URL || 'https://stkpush.co.ke/stk/push';
+        
         const response = await axios.post(
-            'https://stkpush.co.ke/stk/push',
+            gatewayUrl,
             payload,
             {
                 headers: {
-                    'Authorization': `Bearer ${process.env.FINAPI_API_KEY}`,
+                    'Authorization': `Bearer ${process.env.PAYMENT_API_KEY}`,
                     'Content-Type': 'application/json'
                 },
-                timeout: 10000
+                timeout: 12000
             }
         );
 
         return res.status(200).json({
-            success: true,
-            status: 'Prompt Sent',
+            status: 'Success',
+            message: 'STK Push sent successfully.',
             data: response.data
         });
 
     } catch (error) {
-        console.error('FinAPI Execution Error:', error.response ? error.response.data : error.message);
-        
+        console.error('Payment Error:', error.response ? error.response.data : error.message);
+
         return res.status(500).json({
-            success: false,
-            message: error.response?.data?.message || 'Failed to trigger M-Pesa push notification.'
+            status: 'Error',
+            message: error.response?.data?.message || 'Failed to trigger payment prompt. Please try again.'
         });
     }
 });
 
-app.post('/api/callback', (req, res) => {
-    console.log('Payment Callback Received:', req.body);
-    res.status(200).json({ status: 'SUCCESS' });
+// Callback Webhook Endpoint for Payment Confirmation
+app.post('/callback', (req, res) => {
+    console.log('Payment Callback Received:', JSON.stringify(req.body, null, 2));
+    
+    // Process callback data here (e.g., save status to database)
+    
+    res.status(200).json({ status: 'SUCCESS', message: 'Callback processed' });
 });
 
+// Serve frontend index.html on wildcard routes
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Start Server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
