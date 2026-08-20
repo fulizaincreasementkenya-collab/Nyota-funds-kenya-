@@ -9,12 +9,12 @@ const app = express();
 // MIDDLEWARE
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public'))); // weka index.html yako kwa folder 'public'
+app.use(express.static(path.join(__dirname, 'public'))); 
 
 // CREDENTIALS - ZINATOKA RENDER ENV VARIABLES
 const FINAPI_API_KEY = process.env.FINAPI_API_KEY || 'sk_test_a1f9663668ca4e5fbb5644142039967b';
-const CALLBACK_URL = process.env.CALLBACK_URL || 'https://nyota-funds-kenya-citizens.onrender.com/callback';
-const FINAPI_BASE_URL = "https://api.finapi.co.ke"; // Confirm na docs za FinAPI
+const CALLBACK_URL = process.env.CALLBACK_URL || 'https://nyota-funds-kenya-citizens-mabp.onrender.com/callback';
+const FINAPI_BASE_URL = "https://api.finapi.co.ke"; 
 
 console.log("Callback URL:", CALLBACK_URL);
 
@@ -57,21 +57,15 @@ app.post('/pay', async (req, res) => {
     }
 });
 
-// ROUTE 2: CALLBACK - HAPA FINAPI ITAKURUSHIA STATUS
+// ROUTE 2: CALLBACK
 app.post('/callback', (req, res) => {
     console.log("========== CALLBACK RECEIVED ==========");
     console.log(JSON.stringify(req.body, null, 2));
     console.log("=======================================");
-
-    const { status, reference, phone, amount, transaction_id } = req.body;
-    
-    // Hapa unaweza save kwa database
-    // Kama status === 'success' basi grant imelipwa
-
     res.status(200).json({ status: "Received" });
 });
 
-// ROUTE 3: HEALTH CHECK
+// ROUTE 3: FRONTEND
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
