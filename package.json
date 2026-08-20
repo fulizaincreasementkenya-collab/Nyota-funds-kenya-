@@ -1,15 +1,35 @@
 {
-  "name": "nyota-funds-backend",
-  "version": "1.0.0",
-  "description": "Nyota Funds Kenya STK Backend",
-  "main": "server.js",
+  "name": "nyota-funds-payment",
+  "version": "1.1.0",
+  "description": "Nyota Funds M-Pesa STK Push Payment Integration",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "debug": "node debug.js"
   },
+  "keywords": [
+    "mpesa",
+    "stk-push",
+    "finapi",
+    "kenya",
+    "payment"
+  ],
+  "author": "Nyota Funds Team",
+  "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2",
+    "axios": "^1.4.0",
     "cors": "^2.8.5",
-    "axios": "^1.6.0",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-rate-limit": "^6.7.0",
+    "express-validator": "^7.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }
