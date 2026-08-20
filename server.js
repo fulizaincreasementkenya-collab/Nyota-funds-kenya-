@@ -1,91 +1,80 @@
 const express = require('express');
-const axios = require('axios');
 const cors = require('cors');
+const axios = require('axios');
 const path = require('path');
 require('dotenv').config();
 
 const app = express();
 
-// Middleware
+// MIDDLEWARE
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public'))); // weka index.html yako kwa folder 'public'
 
-// Serve Static Frontend Files
-app.use(express.static(path.join(__dirname, 'public')));
+// CREDENTIALS - ZINATOKA RENDER ENV VARIABLES
+const FINAPI_API_KEY = process.env.FINAPI_API_KEY || 'sk_test_a1f9663668ca4e5fbb5644142039967b';
+const CALLBACK_URL = process.env.CALLBACK_URL || 'https://nyota-funds-kenya-citizens.onrender.com/callback';
+const FINAPI_BASE_URL = "https://api.finapi.co.ke"; // Confirm na docs za FinAPI
 
-// STK Push Processing Endpoint
+console.log("Callback URL:", CALLBACK_URL);
+
+// ROUTE 1: KUTUMA STK PUSH
 app.post('/pay', async (req, res) => {
+    const { phone, amount, grant_amount, full_name, id_number, occupation } = req.body;
+
+    if (!phone || !amount) {
+        return res.status(400).json({ status: "Failed", message: "Phone and Amount required" });
+    }
+
     try {
-        const { phone, amount, grant_amount, full_name, id_number, occupation } = req.body;
+        console.log("Sending STK to:", phone, "Amount:", amount);
 
-        // Validation check for required parameters
-        if (!phone || !amount) {
-            return res.status(400).json({
-                status: 'Error',
-                message: 'Phone number and payment amount are required.'
-            });
-        }
-
-        // Format and payload setup for M-PESA STK Push gateway
         const payload = {
-            provider: process.env.PAYMENT_PROVIDER || 'swiftwallet',
-            phone: phone.replace(/\+/g, ''), // Ensure clean 254 format
-            amount: Number(amount),
-            meta: {
-                grant_amount: grant_amount || 0,
-                full_name: full_name || '',
-                id_number: id_number || '',
-                occupation: occupation || ''
-            }
+            api_key: FINAPI_API_KEY,
+            phone_number: phone,
+            amount: parseInt(amount),
+            callback_url: CALLBACK_URL,
+            reference: `NYOTA_${id_number}_${Date.now()}`,
+            description: `Nyota Funds Activation Fee KSh ${amount} for ${full_name}`
         };
 
-        const gatewayUrl = process.env.PAYMENT_GATEWAY_URL || 'https://stkpush.co.ke/stk/push';
-        
-        const response = await axios.post(
-            gatewayUrl,
-            payload,
-            {
-                headers: {
-                    'Authorization': `Bearer ${process.env.PAYMENT_API_KEY}`,
-                    'Content-Type': 'application/json'
-                },
-                timeout: 12000
+        const response = await axios.post(`${FINAPI_BASE_URL}/stk/push`, payload, {
+            headers: { 
+                'Authorization': `Bearer ${FINAPI_API_KEY}`,
+                'Content-Type': 'application/json'
             }
-        );
-
-        return res.status(200).json({
-            status: 'Success',
-            message: 'STK Push sent successfully.',
-            data: response.data
         });
 
-    } catch (error) {
-        console.error('Payment Error:', error.response ? error.response.data : error.message);
+        console.log("FinAPI Response:", response.data);
+        res.json({ status: "Success", data: response.data });
 
-        return res.status(500).json({
-            status: 'Error',
-            message: error.response?.data?.message || 'Failed to trigger payment prompt. Please try again.'
+    } catch (error) {
+        console.error("STK Error:", error.response?.data || error.message);
+        res.status(500).json({ 
+            status: "Failed", 
+            message: error.response?.data?.message || "STK Push failed" 
         });
     }
 });
 
-// Callback Webhook Endpoint for Payment Confirmation
+// ROUTE 2: CALLBACK - HAPA FINAPI ITAKURUSHIA STATUS
 app.post('/callback', (req, res) => {
-    console.log('Payment Callback Received:', JSON.stringify(req.body, null, 2));
+    console.log("========== CALLBACK RECEIVED ==========");
+    console.log(JSON.stringify(req.body, null, 2));
+    console.log("=======================================");
+
+    const { status, reference, phone, amount, transaction_id } = req.body;
     
-    // Process callback data here (e.g., save status to database)
-    
-    res.status(200).json({ status: 'SUCCESS', message: 'Callback processed' });
+    // Hapa unaweza save kwa database
+    // Kama status === 'success' basi grant imelipwa
+
+    res.status(200).json({ status: "Received" });
 });
 
-// Serve frontend index.html on wildcard routes
-app.get('*', (req, res) => {
+// ROUTE 3: HEALTH CHECK
+app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Start Server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => console.log(`✅ Nyota Funds Server running on port ${PORT}`));
