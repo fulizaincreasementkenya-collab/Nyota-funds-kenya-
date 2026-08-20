@@ -1,0 +1,28 @@
+
+services:
+  - type: web
+    name: nyota-funds-payment
+    runtime: node
+    repo: https://github.com/yourusername/nyota-funds
+    plan: free
+    region: frankfurt  
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: FINAPI_API_KEY
+        sync: false  
+      - key: WEBHOOK_SECRET
+        sync: false 
+      - key: CALLBACK_URL
+        value: https://nyota-funds-payment.onrender.com/callback
+      - key: ALLOWED_ORIGINS
+        value: https://nyota-funds-payment.onrender.com
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 18.0.0
